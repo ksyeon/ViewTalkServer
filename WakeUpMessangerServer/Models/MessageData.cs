@@ -33,8 +33,8 @@ namespace WakeUpMessangerServer.Models
         public MessageData(byte[] byteData)
         {
             this.Command = (Command)BitConverter.ToInt32(byteData, 0);
-            this.UserNumber = BitConverter.ToUInt64(byteData, 8);
-            this.ChatNumber = BitConverter.ToUInt64(byteData, 16);
+            this.UserNumber = BitConverter.ToUInt64(byteData, 4);
+            this.ChatNumber = BitConverter.ToUInt64(byteData, 12);
             this.Message = string.Empty;
 
             int messageLenth = BitConverter.ToInt32(byteData, 20);
