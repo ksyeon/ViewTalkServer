@@ -75,8 +75,6 @@ namespace WakeUpMessangerServer.Modules
                 Socket clientSocket = (Socket)ar.AsyncState;
                 clientSocket.EndReceive(ar);
 
-                Console.WriteLine("Receive OK");
-
                 MessageData receiveMessage = new MessageData(byteData);
                 MessageData sendMessage = new MessageData();
 

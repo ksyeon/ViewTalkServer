@@ -37,11 +37,11 @@ namespace WakeUpMessangerServer.Models
             this.ChatNumber = BitConverter.ToUInt64(byteData, 16);
             this.Message = string.Empty;
 
-            int dataLenth = BitConverter.ToInt32(byteData, 20);
+            int messageLenth = BitConverter.ToInt32(byteData, 20);
 
-            if (dataLenth > 0)
+            if (messageLenth > 0)
             {
-                this.Message = Encoding.UTF8.GetString(byteData, 24, dataLenth);
+                this.Message = Encoding.UTF8.GetString(byteData, 24, messageLenth);
             }
         }
 
