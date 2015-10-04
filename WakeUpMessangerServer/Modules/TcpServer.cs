@@ -45,9 +45,9 @@ namespace WakeUpMessangerServer.Modules
                 /* [4] Accept */
                 serverSocket.BeginAccept(new AsyncCallback(OnAccept), null);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -62,9 +62,9 @@ namespace WakeUpMessangerServer.Modules
                 /* [5] Receive */
                 clientSocket.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -95,9 +95,9 @@ namespace WakeUpMessangerServer.Modules
                     clientSocket.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -108,9 +108,9 @@ namespace WakeUpMessangerServer.Modules
                 Socket client = (Socket)ar.AsyncState;
                 client.EndSend(ar);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -124,9 +124,9 @@ namespace WakeUpMessangerServer.Modules
                     serverSocket.Close();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
             }
         }
 
