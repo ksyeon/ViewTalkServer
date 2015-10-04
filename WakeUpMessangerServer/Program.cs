@@ -15,7 +15,7 @@ namespace WakeUpMessangerServer
         {
             Console.WriteLine("[WakeUp Messanger Server]\n");
 
-            TcpServer tcpServer = new TcpServerHelper(8080);
+            TcpServer tcpServer = new TcpServerHelper();
 
             while (true)
             {

@@ -12,9 +12,11 @@ namespace WakeUpMessangerServer.Modules
 {
     public class TcpServerHelper : TcpServer
     {
+        private const int ServerPort = 8080;
+
         public List<ClientInfo> ClientList { get; set; }
 
-        public TcpServerHelper(int serverPort) : base(serverPort)
+        public TcpServerHelper() : base(ServerPort)
         {
             this.ClientList = new List<ClientInfo>();
         }
