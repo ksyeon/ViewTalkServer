@@ -28,7 +28,7 @@ namespace WakeUpMessangerServer.Modules
             Console.WriteLine("TCP Server Start (Port : " + serverPort + ")");
         }
 
-        protected void Initialize()
+        private void Initialize()
         {
             try
             {
@@ -51,7 +51,7 @@ namespace WakeUpMessangerServer.Modules
             }
         }
 
-        protected void OnAccept(IAsyncResult ar)
+        private void OnAccept(IAsyncResult ar)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace WakeUpMessangerServer.Modules
             }
         }
 
-        protected void OnReceive(IAsyncResult ar)
+        private void OnReceive(IAsyncResult ar)
         {
             try
             {
@@ -99,12 +99,12 @@ namespace WakeUpMessangerServer.Modules
             }
         }
 
-        protected void OnSend(IAsyncResult ar)
+        private void OnSend(IAsyncResult ar)
         {
             try
             {
-                Socket client = (Socket)ar.AsyncState;
-                client.EndSend(ar);
+                Socket clientSocket = (Socket)ar.AsyncState;
+                clientSocket.EndSend(ar);
             }
             catch (Exception ex)
             {
