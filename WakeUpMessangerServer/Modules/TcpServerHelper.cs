@@ -67,7 +67,7 @@ namespace WakeUpMessangerServer.Modules
                     }
 
                     // Initialization Message
-                    sendMessage.Command = Command.Logout;
+                    sendMessage.Command = Command.Close;
                     sendMessage.UserNumber = receiveMessage.UserNumber;
 
                     break;
@@ -131,7 +131,7 @@ namespace WakeUpMessangerServer.Modules
         public struct ClientInfo
         {
             public Socket Socket;
-            public ulong UserNumber;
+            public int UserNumber;
         }
     }
 }
