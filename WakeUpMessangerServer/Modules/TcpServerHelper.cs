@@ -14,11 +14,17 @@ namespace WakeUpMessangerServer.Modules
     {
         private const int ServerPort = 8080;
 
-        public List<ClientInfo> ClientList { get; set; }
+        private List<ClientInfo> ClientList;
+
+        private DatabaseHelper database;
+        private JsonHelper json;
 
         public TcpServerHelper() : base(ServerPort)
         {
             this.ClientList = new List<ClientInfo>();
+
+            this.database = new DatabaseHelper();
+            this.json = new JsonHelper();
         }
 
         public override List<Socket> CheckMessage(Socket clientSocket, MessageData receiveMessage, MessageData sendMessage)
@@ -28,6 +34,45 @@ namespace WakeUpMessangerServer.Modules
             switch (receiveMessage.Command)
             {
                 case Command.Login:
+                    Dictionary<string, string> loginInfo = json.GetLoginInfo(receiveMessage.Message);
+
+                    string id = loginInfo[JsonName.ID];
+                    string password = loginInfo[JsonName.Password];
+
+                    bool isExistUser = database.IsExistUser(id, password);
+
+                    if (isExistUser)
+                    {
+                        sendMessage.Command = Command.Login;
+                        sendMessage.UserNumber = database.GetUserNumber(id);
+                    }
+                    else
+                    {
+                        clientSocket.Close();
+                    }
+
+                    break;
+
+                case Command.Close:
+                    // Remove Client Information
+                    ClientList.RemoveAll(item => (item.Socket == clientSocket));
+
+                    // Close Client Socket
+                    clientSocket.Close();
+
+                    // Add Client Socket List
+                    foreach (ClientInfo clientInfo in ClientList)
+                    {
+                        clientSocketList.Add(clientInfo.Socket);
+                    }
+
+                    // Initialization Message
+                    sendMessage.Command = Command.Logout;
+                    sendMessage.UserNumber = receiveMessage.UserNumber;
+
+                    break;
+
+                case Command.Connect:
                     // Add Client Socket List
                     foreach (ClientInfo clientInfo in ClientList)
                     {
@@ -44,25 +89,6 @@ namespace WakeUpMessangerServer.Modules
 
                     // Initialization Message
                     sendMessage.Command = Command.Login;
-                    sendMessage.UserNumber = receiveMessage.UserNumber;
-
-                    break;
-
-                case Command.Logout:
-                    // Remove Client Information
-                    ClientList.RemoveAll(item => (item.Socket == clientSocket));
-
-                    // Close Client Socket
-                    clientSocket.Close();
-
-                    // Add Client Socket List
-                    foreach (ClientInfo clientInfo in ClientList)
-                    {
-                        clientSocketList.Add(clientInfo.Socket);
-                    }
-
-                    // Initialization Message
-                    sendMessage.Command = Command.Logout;
                     sendMessage.UserNumber = receiveMessage.UserNumber;
 
                     break;

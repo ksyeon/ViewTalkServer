@@ -10,7 +10,8 @@ namespace WakeUpMessangerServer.Models
     {
         Null,
         Login,
-        Logout,
+        Close,
+        Connect,
         Update,
         Message
     }
@@ -18,8 +19,8 @@ namespace WakeUpMessangerServer.Models
     public class MessageData
     {
         public Command Command { get; set; }
-        public ulong UserNumber { get; set; }
-        public ulong ChatNumber { get; set; }
+        public int UserNumber { get; set; }
+        public int ChatNumber { get; set; }
         public string Message { get; set; }
 
         public MessageData()
@@ -33,15 +34,15 @@ namespace WakeUpMessangerServer.Models
         public MessageData(byte[] byteData)
         {
             this.Command = (Command)BitConverter.ToInt32(byteData, 0);
-            this.UserNumber = BitConverter.ToUInt64(byteData, 4);
-            this.ChatNumber = BitConverter.ToUInt64(byteData, 12);
+            this.UserNumber = BitConverter.ToInt32(byteData, 4);
+            this.ChatNumber = BitConverter.ToInt32(byteData, 8);
             this.Message = string.Empty;
 
-            int messageLenth = BitConverter.ToInt32(byteData, 20);
+            int messageLenth = BitConverter.ToInt32(byteData, 12);
 
             if (messageLenth > 0)
             {
-                this.Message = Encoding.UTF8.GetString(byteData, 24, messageLenth);
+                this.Message = Encoding.UTF8.GetString(byteData, 16, messageLenth);
             }
         }
 
