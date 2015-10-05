@@ -40,7 +40,7 @@ namespace WakeUpMessangerServer.Modules
                 serverSocket.Bind(ipEndPoint);
 
                 /* [3] Listen */
-                serverSocket.Listen(4);
+                serverSocket.Listen(5);
 
                 /* [4] Accept */
                 serverSocket.BeginAccept(new AsyncCallback(OnAccept), null);
