@@ -16,7 +16,6 @@ namespace WakeUpMessangerServer
             Console.WriteLine("[WakeUp! Messanger Server]\n");
 
             TcpServerHelper tcpServer = new TcpServerHelper();
-            DatabaseHelper database = new DatabaseHelper();
 
             Console.WriteLine("--------------------------------------------------");
 

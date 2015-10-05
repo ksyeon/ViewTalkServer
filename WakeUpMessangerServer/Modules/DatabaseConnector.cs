@@ -19,8 +19,6 @@ namespace WakeUpMessangerServer.Modules
             {
                 string connInfo = $"Server={server};Database={database};Uid={userID};Pwd={password};Charset=utf8";
                 this.dbConnection = new MySqlConnection(connInfo);
-
-                Console.WriteLine("Database Connect Success");
             }
             catch(Exception ex)
             {
