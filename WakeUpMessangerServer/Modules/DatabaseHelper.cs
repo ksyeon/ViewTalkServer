@@ -23,25 +23,5 @@ namespace WakeUpMessangerServer.Modules
 
             this.dbConnector = new DatabaseConnector(server, database, userId, password);
         }
-
-        private int CountRow(string query)
-        {
-            DataSet dataSet = dbConnector.SelectQuery(query);
-
-            return dataSet.Tables[0].Rows.Count;
-        }
-
-        private bool IsExistRow(string query)
-        {
-            bool isExist = false;
-            int count = CountRow(query);
-
-            if(count > 0)
-            {
-                isExist = true;
-            }
-
-            return isExist;
-        }
     }
 }

@@ -69,5 +69,25 @@ namespace WakeUpMessangerServer.Modules
 
             return dataSet;
         }
+
+        public int CountRow(string query)
+        {
+            DataSet dataSet = SelectQuery(query);
+
+            return dataSet.Tables[0].Rows.Count;
+        }
+
+        public bool IsExistRow(string query)
+        {
+            bool isExist = false;
+            int count = CountRow(query);
+
+            if (count > 0)
+            {
+                isExist = true;
+            }
+
+            return isExist;
+        }
     }
 }
