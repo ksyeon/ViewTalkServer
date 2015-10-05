@@ -41,6 +41,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Json">
+      <HintPath>..\..\..\..\..\Desktop\System.Net.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,6 +59,8 @@
     <Compile Include="Modules\DatabaseConnector.cs" />
     <Compile Include="Modules\DatabaseHelper.cs" />
     <Compile Include="Configs\DatabaseConfig.cs" />
+    <Compile Include="Modules\JsonHelper.cs" />
+    <Compile Include="Modules\JsonParser.cs" />
     <Compile Include="Modules\TcpServer.cs" />
     <Compile Include="Modules\TcpServerHelper.cs" />
     <Compile Include="Program.cs" />
