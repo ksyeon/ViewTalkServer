@@ -23,5 +23,23 @@ namespace WakeUpMessangerServer.Modules
 
             this.dbConnector = new DatabaseConnector(server, database, userId, password);
         }
+
+        public bool IsExistUser(string id, string password)
+        {
+            string query = $"SELECT * FORM user WHERE id='{id}' AND password='{password}'";
+            bool result = dbConnector.IsExistRow(query);
+
+            return result;
+        }
+
+        public int GetUserNumber(string id)
+        {
+            string query = $"SELECT no FORM user WHERE id='{id}'";
+            DataSet result = dbConnector.SelectQuery(query);
+
+            int userNumber = Convert.ToInt32(result.Tables[0].Rows[0]["no"]);
+
+            return userNumber;
+        }
     }
 }
