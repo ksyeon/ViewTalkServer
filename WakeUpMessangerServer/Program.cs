@@ -13,9 +13,12 @@ namespace WakeUpMessangerServer
         [STAThread]
         static void Main()
         {
-            Console.WriteLine("[WakeUp Messanger Server]\n");
+            Console.WriteLine("[WakeUp! Messanger Server]\n");
 
-            TcpServer tcpServer = new TcpServerHelper();
+            TcpServerHelper tcpServer = new TcpServerHelper();
+            DatabaseHelper database = new DatabaseHelper();
+
+            Console.WriteLine("--------------------------------------------------");
 
             while (true)
             {
