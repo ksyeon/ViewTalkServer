@@ -55,6 +55,7 @@
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Modules\DatabaseConnector.cs" />
     <Compile Include="Modules\DatabaseHelper.cs" />
+    <Compile Include="Configs\DatabaseConfig.cs" />
     <Compile Include="Modules\TcpServer.cs" />
     <Compile Include="Modules\TcpServerHelper.cs" />
     <Compile Include="Program.cs" />

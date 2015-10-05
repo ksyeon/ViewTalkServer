@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using WakeUpMessangerServer.Configs;
+
 namespace WakeUpMessangerServer.Modules
 {
     class DatabaseHelper
@@ -12,7 +14,12 @@ namespace WakeUpMessangerServer.Modules
 
         public DatabaseHelper()
         {
-            this.dbConnector = new DatabaseConnector("server", "database", "id", "password");
+            string server = DatabaseConfig.Server;
+            string database = DatabaseConfig.Database;
+            string userId = DatabaseConfig.UserId;
+            string password = DatabaseConfig.Password;
+
+            this.dbConnector = new DatabaseConnector(server, database, userId, password);
         }
     }
 }

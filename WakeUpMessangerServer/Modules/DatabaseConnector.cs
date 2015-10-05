@@ -26,7 +26,7 @@ namespace WakeUpMessangerServer.Modules
             }
         }
 
-        public void sendQuery(string query)
+        public void SendQuery(string query)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace WakeUpMessangerServer.Modules
             }
         }
 
-        public DataSet selectQuery(string query)
+        public DataSet SelectQuery(string query)
         {
             DataSet dataSet = new DataSet();
 
