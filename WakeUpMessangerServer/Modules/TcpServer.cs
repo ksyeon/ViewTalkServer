@@ -78,6 +78,8 @@ namespace WakeUpMessangerServer.Modules
                 MessageData receiveMessage = new MessageData(byteData);
                 MessageData sendMessage = new MessageData();
 
+                Console.WriteLine(receiveMessage.Command + " : " + receiveMessage.Message); // Test
+
                 List<Socket> clientSocketList = CheckMessage(clientSocket, receiveMessage, sendMessage);
 
                 byte[] byteMessage = sendMessage.ToByteData();
