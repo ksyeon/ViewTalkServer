@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WakeUpMessangerServer.Configs
 {
-    class DatabaseConfig
+    public class DatabaseConfig
     {
         public const string Server = "";
         public const string Database = "";

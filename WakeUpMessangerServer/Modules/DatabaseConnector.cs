@@ -9,7 +9,7 @@ using MySql.Data.MySqlClient;
 
 namespace WakeUpMessangerServer.Modules
 {
-    class DatabaseConnector
+    public class DatabaseConnector
     {
         private MySqlConnection dbConnection;
 

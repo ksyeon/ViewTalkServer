@@ -8,7 +8,7 @@ using WakeUpMessangerServer.Configs;
 
 namespace WakeUpMessangerServer.Modules
 {
-    class DatabaseHelper
+    public class DatabaseHelper
     {
         DatabaseConnector dbConnector;
 
