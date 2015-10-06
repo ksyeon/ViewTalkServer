@@ -78,7 +78,7 @@ namespace WakeUpMessangerServer.Modules
                 MessageData receiveMessage = new MessageData(byteData);
                 MessageData sendMessage = new MessageData();
 
-                Console.WriteLine($"[{receiveMessage.Command}] {receiveMessage.Command} : {receiveMessage.Message}");
+                Console.WriteLine($"[{receiveMessage.Command}] {receiveMessage.Number} : {receiveMessage.Message}");
 
                 List<Socket> clientSocketList = CheckMessage(clientSocket, receiveMessage, sendMessage);
 
