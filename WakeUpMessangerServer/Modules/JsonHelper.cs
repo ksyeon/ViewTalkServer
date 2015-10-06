@@ -21,14 +21,14 @@ namespace WakeUpMessangerServer.Modules
 
         public Dictionary<string, string> GetLoginInfo(string data)
         {
-            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            Dictionary<string, string> result = new Dictionary<string, string>();
 
             JsonParser jsonParser = new JsonParser(data);
 
-            dictionary.Add(JsonName.ID, jsonParser.GetStringValue(JsonName.ID));
-            dictionary.Add(JsonName.Password, jsonParser.GetStringValue(JsonName.Password));
+            result.Add(JsonName.ID, jsonParser.GetStringValue(JsonName.ID));
+            result.Add(JsonName.Password, jsonParser.GetStringValue(JsonName.Password));
 
-            return dictionary;
+            return result;
         }
     }
 }
