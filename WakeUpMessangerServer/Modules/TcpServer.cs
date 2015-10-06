@@ -23,12 +23,12 @@ namespace WakeUpMessangerServer.Modules
             this.serverPort = serverPort;
             this.byteData = new byte[1024];
 
-            Initialize();
+            ConnectSocket();
 
             Console.WriteLine("TCP Server Start (Port : " + serverPort + ")");
         }
 
-        private void Initialize()
+        private void ConnectSocket()
         {
             try
             {
@@ -78,7 +78,7 @@ namespace WakeUpMessangerServer.Modules
                 MessageData receiveMessage = new MessageData(byteData);
                 MessageData sendMessage = new MessageData();
 
-                Console.WriteLine(receiveMessage.Command + " : " + receiveMessage.Message); // Test
+                Console.WriteLine($"[{receiveMessage.Command}] {receiveMessage.Command} : {receiveMessage.Message}");
 
                 List<Socket> clientSocketList = CheckMessage(clientSocket, receiveMessage, sendMessage);
 
@@ -114,7 +114,7 @@ namespace WakeUpMessangerServer.Modules
             }
         }
 
-        protected void CloseSocket()
+        public void CloseSocket()
         {
             try
             {
