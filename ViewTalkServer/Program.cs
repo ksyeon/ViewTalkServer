@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using WakeUpMessangerServer.Modules;
+using ViewTalkServer.Modules;
 
-namespace WakeUpMessangerServer
+namespace ViewTalkServer
 {
     static class Program
     {

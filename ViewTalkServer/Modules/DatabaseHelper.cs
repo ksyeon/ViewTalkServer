@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using System.Data;
 
-using WakeUpMessangerServer.Configs;
+using ViewTalkServer.Configs;
 
-namespace WakeUpMessangerServer.Modules
+namespace ViewTalkServer.Modules
 {
     public class DatabaseHelper
     {

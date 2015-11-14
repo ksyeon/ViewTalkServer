@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WakeUpMessangerServer.Modules
+namespace ViewTalkServer.Modules
 {
     public class JsonName
     {

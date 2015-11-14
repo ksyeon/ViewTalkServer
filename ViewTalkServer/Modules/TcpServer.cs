@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 
-using WakeUpMessangerServer.Models;
+using ViewTalkServer.Models;
 
-namespace WakeUpMessangerServer.Modules
+namespace ViewTalkServer.Modules
 {
     public abstract class TcpServer
     {

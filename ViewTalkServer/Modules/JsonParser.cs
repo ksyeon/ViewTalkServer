@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.Net.Json;
 
-namespace WakeUpMessangerServer.Modules
+namespace ViewTalkServer.Modules
 {
     public class JsonParser
     {

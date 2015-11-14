@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Data;
 using MySql.Data.MySqlClient;
 
-namespace WakeUpMessangerServer.Modules
+namespace ViewTalkServer.Modules
 {
     public class DatabaseConnector
     {
