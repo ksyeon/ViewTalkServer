@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using ViewTalkServer.Modules;
+using ViewTalkServer.Server;
 
 namespace ViewTalkServer
 {
@@ -13,15 +13,11 @@ namespace ViewTalkServer
         [STAThread]
         static void Main()
         {
-            Console.WriteLine("[WakeUp! Messanger Server]\n");
-
-            TcpServerHelper tcpServer = new TcpServerHelper();
-
-            Console.WriteLine("--------------------------------------------------");
+            MessangerServer server = new MessangerServer();
 
             while (true)
             {
-                // Running TCP Server
+                //server
             }
         }
     }

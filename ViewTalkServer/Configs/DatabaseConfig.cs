@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WakeUpMessangerServer.Configs
+namespace ViewTalkServer.Configs
 {
     public class DatabaseConfig
     {
