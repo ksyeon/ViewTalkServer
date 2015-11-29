@@ -31,20 +31,27 @@ namespace ViewTalkServer.Modules
             return result;
         }
 
-        public string SetChattingUser(List<ClientData> client, int chatNumber) // 수정 필요.
+        public string SetChattingUser(List<ClientData> clientList, int chatNumber)
         {
             JsonObjectCollection result = new JsonObjectCollection();
 
-            foreach(ClientData chattingUser in client)
+            JsonArrayCollection userNumberArray = new JsonArrayCollection(JsonName.UserNumber);
+            JsonArrayCollection nicknameArray = new JsonArrayCollection(JsonName.Nickname);
+
+            foreach (ClientData chattingUser in clientList)
             {
                 if(chattingUser.Group == chatNumber)
                 {
-                    string strUserName = Convert.ToString(chattingUser.Number);
-                    string nickname = database.GetNickName(chattingUser.Number);
+                    string userNumber = Convert.ToString(chattingUser.Number);
+                    string nickname = database.GetNickNameOfNumber(chattingUser.Number);
 
-                    result.Add(new JsonStringValue(strUserName, nickname));
+                    userNumberArray.Add(new JsonStringValue(null, userNumber));
+                    nicknameArray.Add(new JsonStringValue(null, nickname));
                 }
             }
+
+            result.Add(userNumberArray);
+            result.Add(nicknameArray);
 
             return result.ToString();
         }
@@ -54,5 +61,7 @@ namespace ViewTalkServer.Modules
     {
         public const string ID = "ID";
         public const string Password = "Password";
+        public const string UserNumber = "UserNumber";
+        public const string Nickname = "Nickname";
     }
 }

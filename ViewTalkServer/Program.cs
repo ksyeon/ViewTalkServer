@@ -21,8 +21,9 @@ namespace ViewTalkServer
 
             while (true)
             {
-                // tcpServer.CheckConnected();
+                //tcpServer.CheckConnected();
             }
         }
     }
 }
+    

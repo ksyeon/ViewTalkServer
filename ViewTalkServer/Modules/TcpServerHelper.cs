@@ -34,11 +34,15 @@ namespace ViewTalkServer.Modules
 
         public void CheckConnected()
         {
-            foreach (ClientData client in clientList)
+            for(int i = 0; i < clientList.Count; i++)
             {
-                if (client.Socket.Connected == false)
+                if (clientList[i].Socket != null && clientList[i].Socket.Connected == false)
                 {
-                    // 일반 : Logout
+                    if (clientList[i].Group == 0) // 채팅방 접속 X
+                    {
+                        clientList.Remove(clientList[i]);
+                    }
+
                     // 강사 : CloseChatting, Logout
                     // 학생 : ExitChatting, Logout
                 }
@@ -53,46 +57,51 @@ namespace ViewTalkServer.Modules
             switch (receiveMessage.Command)
             {
                 case Command.Login:
-                    // Check Duplication Login
-                    bool isDuplicationLogin = false;
+                    // JSON Parsing
+                    Dictionary<string, string> loginInfo = json.GetLoginInfo(receiveMessage.Message);
 
-                    foreach (ClientData client in clientList)
-                    {
-                        if(client.Number == receiveMessage.UserNumber)
-                        {
-                            isDuplicationLogin = true;
-                            break;
-                        }
-                    }
+                    string id = loginInfo[JsonName.ID];
+                    string password = loginInfo[JsonName.Password];
+
+                    // Database
+                    bool isExistUser = database.IsExistUser(id, password);
 
                     // TCP Message
                     sendMessage.Command = Command.Login;
 
-                    if (!isDuplicationLogin)
+                    if (isExistUser)
                     {
-                        // JSON Parsing
-                        Dictionary<string, string> loginInfo = json.GetLoginInfo(receiveMessage.Message);
+                        // Check Duplication Login
+                        bool isDuplicationLogin = false;
 
-                        string id = loginInfo[JsonName.ID];
-                        string password = loginInfo[JsonName.Password];
+                        sendMessage.UserNumber = database.GetNumberOfId(id);
+                        sendMessage.Message = database.GetNickNameOfNumber(sendMessage.UserNumber);
 
-                        // Database
-                        bool isExistUser = database.IsExistUser(id, password);
-
-                        if (isExistUser)
+                        foreach (ClientData client in clientList)
                         {
-                            sendMessage.UserNumber = database.GetNumberOfId(id);
+                            if (client.Number == sendMessage.UserNumber)
+                            {
+                                isDuplicationLogin = true;
+                                break;
+                            }
+
+                        }
+
+                        if (!isDuplicationLogin)
+                        {
+                            // Add Client List
+                            clientList.Add(new ClientData(clientSocket, sendMessage.UserNumber, 0));
                         }
                         else
                         {
-                            sendMessage.Check = 2;
+                            sendMessage.Check = 1;
                         }
                     }
                     else
                     {
-                        sendMessage.Check = 1;
+                        sendMessage.Check = 2;
                     }
-
+                    
                     // Add Send Client
                     sendClient.Add(new SocketData(clientSocket, sendMessage));
 
@@ -102,8 +111,15 @@ namespace ViewTalkServer.Modules
                     break;
 
                 case Command.CreateChatting :
-                    // Add Client List
-                    clientList.Add(new ClientData(clientSocket, receiveMessage.UserNumber, receiveMessage.UserNumber));
+                    // Update Client List
+                    foreach (ClientData client in clientList)
+                    {
+                        if (client.Number == receiveMessage.UserNumber)
+                        {
+                            client.Group = receiveMessage.UserNumber;
+                            break;
+                        }
+                    }
 
                     // Add Chatting List
                     chattingList.Add(receiveMessage.UserNumber);
@@ -131,8 +147,15 @@ namespace ViewTalkServer.Modules
 
                         if (isExistChatting)
                         {
-                            // Add Client List
-                            clientList.Add(new ClientData(clientSocket, receiveMessage.UserNumber, teacherNumber));
+                            // Update Client List
+                            foreach (ClientData client in clientList)
+                            {
+                                if (client.Number == receiveMessage.UserNumber)
+                                {
+                                    client.Group = teacherNumber;
+                                    break;
+                                }
+                            }
 
                             sendMessage.ChatNumber = teacherNumber;
                         }
@@ -156,7 +179,7 @@ namespace ViewTalkServer.Modules
 
                 case Command.JoinUser:
                     // TCP Message
-                    sendMessage.Command = Command.SendChat;
+                    sendMessage.Command = Command.JoinUser;
                     sendMessage.UserNumber = receiveMessage.UserNumber;
                     sendMessage.ChatNumber = receiveMessage.ChatNumber;
 
@@ -165,12 +188,15 @@ namespace ViewTalkServer.Modules
                     {
                         if(client.Number == receiveMessage.UserNumber)
                         {
+                            sendMessage.Check = 1;
                             sendMessage.Message = json.SetChattingUser(clientList, receiveMessage.ChatNumber);
+
                             sendClient.Add(new SocketData(client.Socket, sendMessage));
                         }
                         else if (client.Group == receiveMessage.ChatNumber)
                         {
-                            sendMessage.Message = database.GetNickName(receiveMessage.UserNumber);
+                            sendMessage.Message = database.GetNickNameOfNumber(receiveMessage.UserNumber);
+
                             sendClient.Add(new SocketData(client.Socket, sendMessage));
                         }
                     }
@@ -206,48 +232,6 @@ namespace ViewTalkServer.Modules
 
                 case Command.ClosePPT:
                     break;
-
-                    /*
-                case Command.Connect:
-                    // Add Client Socket List
-                    foreach (ClientInfo clientInfo in ClientList)
-                    {
-                        clientSocketList.Add(clientInfo.Socket);
-                    }
-
-                    // Add Client Information
-                    ClientInfo receiveClient = new ClientInfo();
-
-                    receiveClient.Socket = clientSocket;
-                    receiveClient.UserNumber = receiveMessage.Number;
-
-                    ClientList.Add(receiveClient);
-
-                    // Message
-                    sendMessage.Command = Command.Connect;
-                    sendMessage.Number = receiveMessage.Number;
-
-                    break;
-                    
-                case Command.Close:
-                    // Remove Client Information
-                    ClientList.RemoveAll(item => (item.Socket == clientSocket));
-
-                    // Close Client Socket
-                    clientSocket.Close();
-
-                    // Add Client Socket List
-                    foreach (ClientInfo clientInfo in ClientList)
-                    {
-                        clientSocketList.Add(clientInfo.Socket);
-                    }
-
-                    // Message
-                    sendMessage.Command = Command.Close;
-                    sendMessage.Number = receiveMessage.Number;
-
-                    break;
-                    */
             }
 
             return sendClient;
