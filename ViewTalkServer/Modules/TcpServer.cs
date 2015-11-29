@@ -16,12 +16,12 @@ namespace ViewTalkServer.Modules
         private Socket serverSocket;
         private int serverPort;
 
-        private byte[] byteData;
+        private byte[] receiveData;
 
         public TcpServer(int serverPort)
         {
             this.serverPort = serverPort;
-            this.byteData = new byte[1024];
+            this.receiveData = new byte[1024];
 
             ConnectSocket();
 
@@ -60,7 +60,7 @@ namespace ViewTalkServer.Modules
                 serverSocket.BeginAccept(new AsyncCallback(OnAccept), null);
 
                 /* [5] Receive */
-                clientSocket.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
+                clientSocket.BeginReceive(receiveData, 0, receiveData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
             }
             catch (Exception ex)
             {
@@ -75,24 +75,23 @@ namespace ViewTalkServer.Modules
                 Socket clientSocket = (Socket)ar.AsyncState;
                 clientSocket.EndReceive(ar);
 
-                MessageData receiveMessage = new MessageData(byteData);
-                MessageData sendMessage = new MessageData();
+                TcpMessage receiveMessage = new TcpMessage(receiveData);
+                List<SocketData> SendClient = ResponseMessage(clientSocket, receiveMessage);
 
-                Console.WriteLine($"[{receiveMessage.Command}] {receiveMessage.Number} : {receiveMessage.Message}");
+                Console.WriteLine(receiveMessage.Message);
 
-                List<Socket> clientSocketList = CheckMessage(clientSocket, receiveMessage, sendMessage);
-
-                byte[] byteMessage = sendMessage.ToByteData();
-
-                foreach (Socket socket in clientSocketList)
+                foreach (SocketData client in SendClient)
                 {
+                    Socket sendSocket = client.Socket;
+                    byte[] sendMessage = client.Message;
+
                     /* [6] Send */
-                    socket.BeginSend(byteMessage, 0, byteMessage.Length, SocketFlags.None, new AsyncCallback(OnSend), socket);
+                    sendSocket.BeginSend(sendMessage, 0, sendMessage.Length, SocketFlags.None, new AsyncCallback(OnSend), sendSocket);
                 }
 
                 if (clientSocket.Connected)
                 {
-                    clientSocket.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
+                    clientSocket.BeginReceive(receiveData, 0, receiveData.Length, SocketFlags.None, new AsyncCallback(OnReceive), clientSocket);
                 }
             }
             catch (Exception ex)
@@ -127,6 +126,6 @@ namespace ViewTalkServer.Modules
             }
         }
 
-        public abstract List<Socket> CheckMessage(Socket clientSockect, MessageData receiveMessage, MessageData sendMessage);
+        public abstract List<SocketData> ResponseMessage(Socket clientSockect, TcpMessage receiveMessage);
     }
 }

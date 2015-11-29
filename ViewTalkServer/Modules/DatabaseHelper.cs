@@ -32,7 +32,23 @@ namespace ViewTalkServer.Modules
             return result;
         }
 
-        public int GetUserNumber(string id)
+        public bool IsExistId(string id)
+        {
+            string query = $"SELECT * FROM user WHERE id='{id}'";
+            bool result = dbConnector.IsExistRow(query);
+
+            return result;
+        }
+
+        public bool IsExistNickname(string nickname)
+        {
+            string query = $"SELECT * FROM user WHERE nickname='{nickname}'";
+            bool result = dbConnector.IsExistRow(query);
+
+            return result;
+        }
+
+        public int GetNumberOfId(string id)
         {
             string query = $"SELECT no FROM user WHERE id = '{id}'";
             DataSet result = dbConnector.SelectQuery(query);
@@ -40,6 +56,26 @@ namespace ViewTalkServer.Modules
             int userNumber = Convert.ToInt32(result.Tables[0].Rows[0]["no"]);
 
             return userNumber;
+        }
+
+        public int GetNumberOfNickname(string nickname)
+        {
+            string query = $"SELECT no FROM user WHERE nickname = '{nickname}'";
+            DataSet result = dbConnector.SelectQuery(query);
+
+            int userNumber = Convert.ToInt32(result.Tables[0].Rows[0]["no"]);
+
+            return userNumber;
+        }
+
+        public string GetNickName(int number)
+        {
+            string query = $"SELECT nickname FROM user WHERE no = '{number}'";
+            DataSet result = dbConnector.SelectQuery(query);
+
+            string userNickName= Convert.ToString(result.Tables[0].Rows[0]["nickname"]);
+
+            return userNickName;
         }
     }
 }
