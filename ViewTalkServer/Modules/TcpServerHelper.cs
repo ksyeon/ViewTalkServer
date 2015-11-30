@@ -18,7 +18,7 @@ namespace ViewTalkServer.Modules
         private JsonHelper json;
 
         public List<ClientData> clientList { get; set; }
-        public List<int> chattingList { get; set; }
+        public List<ChattingData> chattingList { get; set; }
 
         public delegate void MessageDelegate(TcpMessage message);
         public MessageDelegate ExecuteMessage { get; set; }
@@ -29,10 +29,10 @@ namespace ViewTalkServer.Modules
             this.json = new JsonHelper();
 
             this.clientList = new List<ClientData>();
-            this.chattingList = new List<int>();
+            this.chattingList = new List<ChattingData>();
         }
 
-        public void CheckConnected()
+        public override void CheckConnected()
         {
             for(int i = 0; i < clientList.Count; i++)
             {
@@ -84,7 +84,6 @@ namespace ViewTalkServer.Modules
                                 isDuplicationLogin = true;
                                 break;
                             }
-
                         }
 
                         if (!isDuplicationLogin)
@@ -122,7 +121,7 @@ namespace ViewTalkServer.Modules
                     }
 
                     // Add Chatting List
-                    chattingList.Add(receiveMessage.UserNumber);
+                    chattingList.Add(new ChattingData(receiveMessage.UserNumber));
 
                     // TCP Message
                     sendMessage.Command = Command.CreateChatting;
@@ -143,7 +142,7 @@ namespace ViewTalkServer.Modules
                     {
                         // Check Existed Chatting
                         int teacherNumber = database.GetNumberOfNickname(receiveMessage.Message);
-                        bool isExistChatting = chattingList.Contains(teacherNumber);
+                        bool isExistChatting = chattingList.Exists(x => (x.ChatNumber == teacherNumber));
 
                         if (isExistChatting)
                         {
@@ -213,7 +212,7 @@ namespace ViewTalkServer.Modules
                     sendMessage.ChatNumber = receiveMessage.ChatNumber;
                     sendMessage.Message = receiveMessage.Message;
 
-                    // Add Client Socket List
+                    // Add Client List
                     foreach (ClientData client in clientList)
                     {
                         if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
@@ -224,13 +223,47 @@ namespace ViewTalkServer.Modules
 
                     break;
 
-                case Command.LoadPPT:
-                    break;
+                case Command.SendPPT:
+                    // TCP Message
+                    sendMessage.Command = Command.SendPPT;
+                    sendMessage.UserNumber = receiveMessage.UserNumber;
+                    sendMessage.ChatNumber = receiveMessage.ChatNumber;
+                    sendMessage.PPT = receiveMessage.PPT;
 
-                case Command.MovePPT:
+                    // Add Chatting List
+                    ChattingData SendPPT = chattingList.Find(x => (x.ChatNumber == receiveMessage.ChatNumber)); // ArgumentNullException
+                    SendPPT.PPT = receiveMessage.PPT;
+
+                    // Add Client List
+                    foreach (ClientData client in clientList)
+                    {
+                        if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
+                        {
+                            sendClient.Add(new SocketData(client.Socket, sendMessage));
+                        }
+                    }
+
                     break;
 
                 case Command.ClosePPT:
+                    // TCP Message
+                    sendMessage.Command = Command.ClosePPT;
+                    sendMessage.UserNumber = receiveMessage.UserNumber;
+                    sendMessage.ChatNumber = receiveMessage.ChatNumber;
+
+                    // Add Chatting List
+                    ChattingData closePPT = chattingList.Find(x => (x.ChatNumber == receiveMessage.ChatNumber)); // ArgumentNullException
+                    closePPT.PPT.ResetPPT();
+
+                    // Add Client List
+                    foreach (ClientData client in clientList)
+                    {
+                        if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
+                        {
+                            sendClient.Add(new SocketData(client.Socket, sendMessage));
+                        }
+                    }
+
                     break;
             }
 

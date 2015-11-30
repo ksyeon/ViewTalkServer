@@ -13,6 +13,7 @@ namespace ViewTalkServer.Models
         public int UserNumber { get; set; }
         public int ChatNumber { get; set; }
         public string Message { get; set; }
+        public PPTData PPT { get; set; }
 
         public TcpMessage()
         {
@@ -21,6 +22,7 @@ namespace ViewTalkServer.Models
             this.UserNumber = 0;
             this.ChatNumber = 0;
             this.Message = string.Empty;
+            this.PPT = new PPTData();
         }
 
         public TcpMessage(byte[] byteData)
@@ -30,13 +32,22 @@ namespace ViewTalkServer.Models
             this.UserNumber = BitConverter.ToInt32(byteData, 8);
             this.ChatNumber = BitConverter.ToInt32(byteData, 12);
             this.Message = string.Empty;
+            this.PPT = new PPTData();
 
             int messageLenth = BitConverter.ToInt32(byteData, 16);
-
             if (messageLenth > 0)
             {
                 this.Message = Encoding.Unicode.GetString(byteData, 20, messageLenth);
             }
+
+            // PPT
+            PPT.LastPage = BitConverter.ToInt32(byteData, messageLenth + 20);
+            PPT.CurrentPage = BitConverter.ToInt32(byteData, messageLenth + 24);
+
+            int pptLenth = BitConverter.ToInt32(byteData, messageLenth + 28);
+
+            PPT.CurrentPPT = new byte[pptLenth];
+            Array.Copy(byteData, messageLenth + 32, PPT.CurrentPPT, 0, pptLenth);
         }
 
         public byte[] ToByteData()
@@ -49,6 +60,12 @@ namespace ViewTalkServer.Models
             byteData.AddRange(BitConverter.GetBytes(ChatNumber));
             byteData.AddRange(BitConverter.GetBytes(Encoding.Unicode.GetByteCount(Message)));
             byteData.AddRange(Encoding.Unicode.GetBytes(Message));
+
+            // PPT
+            byteData.AddRange(BitConverter.GetBytes(PPT.LastPage));
+            byteData.AddRange(BitConverter.GetBytes(PPT.CurrentPage));
+            byteData.AddRange(BitConverter.GetBytes(PPT.CurrentPPT.Length));
+            byteData.AddRange(PPT.CurrentPPT);
 
             return byteData.ToArray();
         }
@@ -65,8 +82,7 @@ namespace ViewTalkServer.Models
         JoinUser,
         ExitUser,
         SendChat,
-        LoadPPT,
-        MovePPT,
+        SendPPT,
         ClosePPT
     }
 }

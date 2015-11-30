@@ -21,7 +21,7 @@ namespace ViewTalkServer.Modules
         public TcpServer(int serverPort)
         {
             this.serverPort = serverPort;
-            this.receiveData = new byte[1024];
+            this.receiveData = new byte[32768];
 
             ConnectSocket();
 
@@ -96,6 +96,8 @@ namespace ViewTalkServer.Modules
             }
             catch (Exception ex)
             {
+                CheckConnected();
+
                 Console.WriteLine(ex.Message);
             }
         }
@@ -127,5 +129,6 @@ namespace ViewTalkServer.Modules
         }
 
         public abstract List<SocketData> ResponseMessage(Socket clientSockect, TcpMessage receiveMessage);
+        public abstract void CheckConnected();
     }
 }

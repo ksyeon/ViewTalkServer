@@ -56,12 +56,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ChattingData.cs" />
     <Compile Include="Models\ClientData.cs" />
+    <Compile Include="Models\PPTData.cs" />
     <Compile Include="Models\SocketData.cs" />
     <Compile Include="Models\TcpMessage.cs" />
     <Compile Include="Modules\DatabaseConnector.cs" />
     <Compile Include="Modules\DatabaseHelper.cs" />
-    <Compile Include="Models\Configs\DatabaseConfig.cs" />
+    <Compile Include="Configs\DatabaseConfig.cs" />
     <Compile Include="Modules\JsonHelper.cs" />
     <Compile Include="Modules\JsonParser.cs" />
     <Compile Include="Modules\TcpServer.cs" />
