@@ -89,6 +89,7 @@ namespace ViewTalkServer.Modules
                         if (!isDuplicationLogin)
                         {
                             // Add Client List
+                            sendMessage.Check = 0;
                             clientList.Add(new ClientData(clientSocket, sendMessage.UserNumber, 0));
                         }
                         else
@@ -100,7 +101,7 @@ namespace ViewTalkServer.Modules
                     {
                         sendMessage.Check = 2;
                     }
-                    
+
                     // Add Send Client
                     sendClient.Add(new SocketData(clientSocket, sendMessage));
 
@@ -156,6 +157,7 @@ namespace ViewTalkServer.Modules
                                 }
                             }
 
+                            sendMessage.Check = 0;
                             sendMessage.ChatNumber = teacherNumber;
                         }
                         else
@@ -194,6 +196,7 @@ namespace ViewTalkServer.Modules
                         }
                         else if (client.Group == receiveMessage.ChatNumber)
                         {
+                            sendMessage.Check = 0;
                             sendMessage.Message = database.GetNickNameOfNumber(receiveMessage.UserNumber);
 
                             sendClient.Add(new SocketData(client.Socket, sendMessage));
