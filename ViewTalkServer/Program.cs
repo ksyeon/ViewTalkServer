@@ -15,13 +15,13 @@ namespace ViewTalkServer
         {
             Console.WriteLine("[View Talk Server]\n");
 
-            MessangerServer tcpServer = new MessangerServer();
+            MessangerServer messanger = new MessangerServer();
 
             Console.WriteLine("--------------------------------------------------");
 
             while (true)
             {
-                //tcpServer.CheckConnected();
+
             }
         }
     }
