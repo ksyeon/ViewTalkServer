@@ -69,8 +69,9 @@ namespace ViewTalkServer.Modules
                         if (!isDuplicationLogin)
                         {
                             // Add Client List
-                            sendMessage.Check = 0;
                             clientList.Add(new ClientData(clientSocket, sendMessage.UserNumber, 0));
+
+                            sendMessage.Check = 0;
                         }
                         else
                         {
@@ -88,8 +89,16 @@ namespace ViewTalkServer.Modules
                     break;
 
                 case Command.Logout:
+                    // Remove Client List
                     ClientData logout = clientList.Find(x => (x.Number == receiveMessage.UserNumber)); // ArgumentNullException
                     clientList.Remove(logout);
+
+                    // TCP Message
+                    sendMessage.Command = Command.Logout;
+                    sendMessage.UserNumber = receiveMessage.UserNumber;
+
+                    // Add Send Client
+                    sendClient.Add(new SocketData(clientSocket, sendMessage));
 
                     break;
 
