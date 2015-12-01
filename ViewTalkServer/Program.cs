@@ -15,7 +15,7 @@ namespace ViewTalkServer
         {
             Console.WriteLine("[View Talk Server]\n");
 
-            TcpServerHelper tcpServer = new TcpServerHelper();
+            MessangerServer tcpServer = new MessangerServer();
 
             Console.WriteLine("--------------------------------------------------");
 

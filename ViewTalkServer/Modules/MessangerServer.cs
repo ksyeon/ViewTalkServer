@@ -10,7 +10,7 @@ using ViewTalkServer.Models;
 
 namespace ViewTalkServer.Modules
 {
-    public class TcpServerHelper : TcpServer
+    public class MessangerServer : TcpServer
     {
         private const int ServerPort = 8080;
 
@@ -23,30 +23,13 @@ namespace ViewTalkServer.Modules
         public delegate void MessageDelegate(TcpMessage message);
         public MessageDelegate ExecuteMessage { get; set; }
 
-        public TcpServerHelper() : base(ServerPort)
+        public MessangerServer() : base(ServerPort)
         {
             this.database = new DatabaseHelper();
             this.json = new JsonHelper();
 
             this.clientList = new List<ClientData>();
             this.chattingList = new List<ChattingData>();
-        }
-
-        public override void CheckConnected()
-        {
-            for(int i = 0; i < clientList.Count; i++)
-            {
-                if (clientList[i].Socket != null && clientList[i].Socket.Connected == false)
-                {
-                    if (clientList[i].Group == 0) // 채팅방 접속 X
-                    {
-                        clientList.Remove(clientList[i]);
-                    }
-
-                    // 강사 : CloseChatting, Logout
-                    // 학생 : ExitChatting, Logout
-                }
-            }
         }
 
         public override List<SocketData> ResponseMessage(Socket clientSocket, TcpMessage receiveMessage)
@@ -176,6 +159,20 @@ namespace ViewTalkServer.Modules
                     break;
 
                 case Command.CloseChatting:
+                    // TCP Message
+                    sendMessage.Command = Command.CloseChatting;
+                    sendMessage.UserNumber = receiveMessage.UserNumber;
+                    sendMessage.ChatNumber = receiveMessage.ChatNumber;
+
+                    // Add Send List
+                    foreach (ClientData client in clientList)
+                    {
+                        if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
+                        {
+                            sendClient.Add(new SocketData(client.Socket, sendMessage));
+                        }
+                    }
+
                     break;
 
                 case Command.JoinUser:
@@ -192,6 +189,9 @@ namespace ViewTalkServer.Modules
                             sendMessage.Check = 1;
                             sendMessage.Message = json.SetChattingUser(clientList, receiveMessage.ChatNumber);
 
+                            ChattingData joinPPT = chattingList.Find(x => (x.ChatNumber == receiveMessage.ChatNumber)); // ArgumentNullException
+                            sendMessage.PPT = joinPPT.PPT;
+
                             sendClient.Add(new SocketData(client.Socket, sendMessage));
                         }
                         else if (client.Group == receiveMessage.ChatNumber)
@@ -206,6 +206,20 @@ namespace ViewTalkServer.Modules
                     break;
 
                 case Command.ExitUser:
+                    // TCP Message
+                    sendMessage.Command = Command.ExitUser;
+                    sendMessage.UserNumber = receiveMessage.UserNumber;
+                    sendMessage.ChatNumber = receiveMessage.ChatNumber;
+
+                    // Add Send List
+                    foreach (ClientData client in clientList)
+                    {
+                        if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
+                        {
+                            sendClient.Add(new SocketData(client.Socket, sendMessage));
+                        }
+                    }
+
                     break;
 
                 case Command.SendChat:
@@ -215,7 +229,7 @@ namespace ViewTalkServer.Modules
                     sendMessage.ChatNumber = receiveMessage.ChatNumber;
                     sendMessage.Message = receiveMessage.Message;
 
-                    // Add Client List
+                    // Add Send List
                     foreach (ClientData client in clientList)
                     {
                         if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
@@ -237,7 +251,7 @@ namespace ViewTalkServer.Modules
                     ChattingData SendPPT = chattingList.Find(x => (x.ChatNumber == receiveMessage.ChatNumber)); // ArgumentNullException
                     SendPPT.PPT = receiveMessage.PPT;
 
-                    // Add Client List
+                    // Add Send List
                     foreach (ClientData client in clientList)
                     {
                         if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
@@ -258,7 +272,7 @@ namespace ViewTalkServer.Modules
                     ChattingData closePPT = chattingList.Find(x => (x.ChatNumber == receiveMessage.ChatNumber)); // ArgumentNullException
                     closePPT.PPT.ResetPPT();
 
-                    // Add Client List
+                    // Add Send List
                     foreach (ClientData client in clientList)
                     {
                         if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
@@ -271,6 +285,44 @@ namespace ViewTalkServer.Modules
             }
 
             return sendClient;
+        }
+
+        public override void CheckConnected()
+        {
+            for (int i = 0; i < clientList.Count; i++)
+            {
+                if (clientList[i].Socket != null && clientList[i].Socket.Connected == false)
+                {
+                    if (clientList[i].Group == 0) // 채팅방 X
+                    {
+                        clientList.Remove(clientList[i]);
+                    }
+                    else if (clientList[i].Number == clientList[i].Group) // 채팅방, 강사
+                    {
+                        TcpMessage sendMessage = new TcpMessage();
+
+                        sendMessage.Command = Command.CloseChatting;
+                        sendMessage.UserNumber = clientList[i].Number;
+                        sendMessage.ChatNumber = clientList[i].Group;
+
+                        clientList.Remove(clientList[i]);
+
+                        SendMessage(sendMessage);
+                    }
+                    else // 채팅방, 학생
+                    {
+                        TcpMessage sendMessage = new TcpMessage();
+
+                        sendMessage.Command = Command.ExitUser;
+                        sendMessage.UserNumber = clientList[i].Number;
+                        sendMessage.ChatNumber = clientList[i].Group;
+
+                        clientList.Remove(clientList[i]);
+
+                        SendMessage(sendMessage);
+                    }
+                }
+            }
         }
     }
 }

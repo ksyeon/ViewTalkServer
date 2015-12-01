@@ -68,6 +68,32 @@ namespace ViewTalkServer.Modules
             }
         }
 
+        protected bool SendMessage(TcpMessage message)
+        {
+            bool isSucess = false;
+
+            try
+            {
+                List<SocketData> SendClient = ResponseMessage(null, message);
+
+                foreach (SocketData client in SendClient)
+                {
+                    Socket sendSocket = client.Socket;
+                    byte[] sendMessage = client.Message;
+
+                    sendSocket.BeginSend(sendMessage, 0, sendMessage.Length, SocketFlags.None, new AsyncCallback(OnSend), sendSocket);
+                }
+
+                isSucess = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return isSucess;
+        }
+
         private void OnReceive(IAsyncResult ar)
         {
             try
