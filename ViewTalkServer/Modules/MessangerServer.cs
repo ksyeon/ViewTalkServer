@@ -91,6 +91,9 @@ namespace ViewTalkServer.Modules
                     break;
 
                 case Command.Logout:
+                    ClientData logout = clientList.Find(x => (x.Number == receiveMessage.UserNumber)); // ArgumentNullException
+                    clientList.Remove(logout);
+
                     break;
 
                 case Command.CreateChatting :
@@ -248,8 +251,8 @@ namespace ViewTalkServer.Modules
                     sendMessage.PPT = receiveMessage.PPT;
 
                     // Add Chatting List
-                    ChattingData SendPPT = chattingList.Find(x => (x.ChatNumber == receiveMessage.ChatNumber)); // ArgumentNullException
-                    SendPPT.PPT = receiveMessage.PPT;
+                    ChattingData sendPPT = chattingList.Find(x => (x.ChatNumber == receiveMessage.ChatNumber)); // ArgumentNullException
+                    sendPPT.PPT = receiveMessage.PPT;
 
                     // Add Send List
                     foreach (ClientData client in clientList)
