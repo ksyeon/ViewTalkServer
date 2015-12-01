@@ -104,8 +104,6 @@ namespace ViewTalkServer.Modules
                 TcpMessage receiveMessage = new TcpMessage(receiveData);
                 List<SocketData> SendClient = ResponseMessage(clientSocket, receiveMessage);
 
-                Console.WriteLine(receiveMessage.Message);
-
                 foreach (SocketData client in SendClient)
                 {
                     Socket sendSocket = client.Socket;

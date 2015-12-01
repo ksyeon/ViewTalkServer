@@ -83,6 +83,8 @@ namespace ViewTalkServer.Modules
                         sendMessage.Check = 2;
                     }
 
+
+
                     // Add Send Client
                     sendClient.Add(new SocketData(clientSocket, sendMessage));
 
