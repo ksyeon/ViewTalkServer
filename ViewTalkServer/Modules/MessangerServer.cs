@@ -20,9 +20,6 @@ namespace ViewTalkServer.Modules
         public List<ClientData> clientList { get; set; }
         public List<ChattingData> chattingList { get; set; }
 
-        public delegate void MessageDelegate(TcpMessage message);
-        public MessageDelegate ExecuteMessage { get; set; }
-
         public MessangerServer() : base(ServerPort)
         {
             this.database = new DatabaseHelper();
