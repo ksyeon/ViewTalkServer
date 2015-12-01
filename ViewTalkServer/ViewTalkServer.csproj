@@ -66,8 +66,8 @@
     <Compile Include="Configs\DatabaseConfig.cs" />
     <Compile Include="Modules\JsonHelper.cs" />
     <Compile Include="Modules\JsonParser.cs" />
+    <Compile Include="Modules\MessangerServer.cs" />
     <Compile Include="Modules\TcpServer.cs" />
-    <Compile Include="Modules\TcpServerHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
