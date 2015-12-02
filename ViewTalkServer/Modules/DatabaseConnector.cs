@@ -68,7 +68,7 @@ namespace ViewTalkServer.Modules
             return dataSet;
         }
 
-        public int CountRow(string query)
+        public int GetCountRow(string query)
         {
             DataSet dataSet = SelectQuery(query);
 
@@ -78,7 +78,7 @@ namespace ViewTalkServer.Modules
         public bool IsExistRow(string query)
         {
             bool isExist = false;
-            int count = CountRow(query);
+            int count = GetCountRow(query);
 
             if (count > 0)
             {
