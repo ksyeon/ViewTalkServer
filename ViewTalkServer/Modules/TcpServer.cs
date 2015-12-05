@@ -21,7 +21,7 @@ namespace ViewTalkServer.Modules
         public TcpServer(int serverPort)
         {
             this.serverPort = serverPort;
-            this.receiveData = new byte[32768];
+            this.receiveData = new byte[65000];
 
             ConnectSocket();
 
