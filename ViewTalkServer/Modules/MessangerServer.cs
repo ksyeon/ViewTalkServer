@@ -54,8 +54,10 @@ namespace ViewTalkServer.Modules
                         // Check Duplication Login
                         bool isDuplicationLogin = false;
 
-                        sendMessage.UserNumber = database.GetNumberOfId(id);
-                        sendMessage.Message = database.GetNickNameOfNumber(sendMessage.UserNumber);
+                        int userNumber = database.GetNumberOfId(id);
+
+                        sendMessage.UserNumber = userNumber;
+                        sendMessage.Message = database.GetNickNameOfNumber(userNumber);
 
                         foreach (ClientData client in clientList)
                         {
@@ -72,6 +74,9 @@ namespace ViewTalkServer.Modules
                             clientList.Add(new ClientData(clientSocket, sendMessage.UserNumber, 0));
 
                             sendMessage.Check = 0;
+
+                            // [Login]
+                            Console.WriteLine($"[LOGIN] {id} ({userNumber})");
                         }
                         else
                         {
@@ -83,8 +88,6 @@ namespace ViewTalkServer.Modules
                         sendMessage.Check = 2;
                     }
 
-
-
                     // Add Send Client
                     sendClient.Add(new SocketData(clientSocket, sendMessage));
 
@@ -93,6 +96,7 @@ namespace ViewTalkServer.Modules
                 case Command.Logout:
                     // Remove Client List
                     ClientData logout = clientList.Find(x => (x.Number == receiveMessage.UserNumber)); // ArgumentNullException
+
                     clientList.Remove(logout);
 
                     // TCP Message
@@ -101,6 +105,11 @@ namespace ViewTalkServer.Modules
 
                     // Add Send Client
                     sendClient.Add(new SocketData(clientSocket, sendMessage));
+
+                    // [Logout]
+                    int userNumber2 = receiveMessage.UserNumber;
+                    string id2 = database.GetIdOfNumber(userNumber2);
+                    Console.WriteLine($"[LOGOUT] {id2} ({userNumber2})");
 
                     break;
 
@@ -123,6 +132,11 @@ namespace ViewTalkServer.Modules
 
                     // Add Send Client
                     sendClient.Add(new SocketData(clientSocket, sendMessage));
+
+                    // [CREATE]
+                    int userNumber3 = receiveMessage.UserNumber;
+                    string id3 = database.GetIdOfNumber(userNumber3);
+                    Console.WriteLine($"[CREATE]\t {id3} ({userNumber3})");
 
                     break;
 
@@ -175,14 +189,29 @@ namespace ViewTalkServer.Modules
                     sendMessage.UserNumber = receiveMessage.UserNumber;
                     sendMessage.ChatNumber = receiveMessage.ChatNumber;
 
-                    // Add Send List
+                    // Add Send List & Update Client List
                     foreach (ClientData client in clientList)
                     {
+                        // Add Send List
                         if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
                         {
                             sendClient.Add(new SocketData(client.Socket, sendMessage));
                         }
+
+                        // Update Client List
+                        if (client.Group == receiveMessage.ChatNumber)
+                        {
+                            client.Group = 0;
+                        }
                     }
+
+                    // Remove Chat List
+                    chattingList.RemoveAll(x => (x.ChatNumber == receiveMessage.ChatNumber));
+
+                    // [CLOSE]
+                    int userNumber4 = receiveMessage.UserNumber;
+                    string id4 = database.GetIdOfNumber(userNumber4);
+                    Console.WriteLine($"[CLOSE]\t {id4} ({userNumber3})");
 
                     break;
 
@@ -222,12 +251,19 @@ namespace ViewTalkServer.Modules
                     sendMessage.UserNumber = receiveMessage.UserNumber;
                     sendMessage.ChatNumber = receiveMessage.ChatNumber;
 
-                    // Add Send List
+                    // Add Send List & Update Client List
                     foreach (ClientData client in clientList)
                     {
+                        // Add Send List
                         if (client.Number != receiveMessage.UserNumber && client.Group == receiveMessage.ChatNumber)
                         {
                             sendClient.Add(new SocketData(client.Socket, sendMessage));
+                        }
+
+                        // Update Client List
+                        if (client.Number == receiveMessage.UserNumber)
+                        {
+                            client.Group = 0;
                         }
                     }
 
@@ -312,11 +348,14 @@ namespace ViewTalkServer.Modules
                     {
                         TcpMessage sendMessage = new TcpMessage();
 
+                        // Remove Client List & Chat List
+                        clientList.Remove(clientList[i]);
+                        chattingList.RemoveAll(x => (x.ChatNumber == clientList[i].Number));
+
+                        // TCP Message
                         sendMessage.Command = Command.CloseChatting;
                         sendMessage.UserNumber = clientList[i].Number;
                         sendMessage.ChatNumber = clientList[i].Group;
-
-                        clientList.Remove(clientList[i]);
 
                         SendMessage(sendMessage);
                     }
@@ -324,11 +363,13 @@ namespace ViewTalkServer.Modules
                     {
                         TcpMessage sendMessage = new TcpMessage();
 
+                        // Client List
+                        clientList.Remove(clientList[i]);
+
+                        // TCP Message
                         sendMessage.Command = Command.ExitUser;
                         sendMessage.UserNumber = clientList[i].Number;
                         sendMessage.ChatNumber = clientList[i].Group;
-
-                        clientList.Remove(clientList[i]);
 
                         SendMessage(sendMessage);
                     }

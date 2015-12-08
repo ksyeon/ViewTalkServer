@@ -68,6 +68,16 @@ namespace ViewTalkServer.Modules
             return userNumber;
         }
 
+        public string GetIdOfNumber(int number)
+        {
+            string query = $"SELECT id FROM user WHERE no = '{number}'";
+            DataSet result = dbConnector.SelectQuery(query);
+
+            string id = Convert.ToString(result.Tables[0].Rows[0]["id"]);
+
+            return id;
+        }
+
         public string GetNickNameOfNumber(int number)
         {
             string query = $"SELECT nickname FROM user WHERE no = '{number}'";
