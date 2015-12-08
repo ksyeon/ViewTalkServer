@@ -25,7 +25,7 @@ namespace ViewTalkServer.Modules
 
             ConnectSocket();
 
-            Console.WriteLine("TCP Server Start (Port : " + serverPort + ")");
+            Console.WriteLine($"Messanger Server Start (Port : {serverPort})");
         }
 
         private void ConnectSocket()
