@@ -211,7 +211,7 @@ namespace ViewTalkServer.Modules
                     // [CLOSE]
                     int userNumber4 = receiveMessage.UserNumber;
                     string id4 = database.GetIdOfNumber(userNumber4);
-                    Console.WriteLine($"[CLOSE]\t {id4} ({userNumber3})");
+                    Console.WriteLine($"[CLOSE]\t {id4} ({userNumber4})");
 
                     break;
 
