@@ -136,7 +136,7 @@ namespace ViewTalkServer.Modules
                     // [CREATE]
                     int userNumber3 = receiveMessage.UserNumber;
                     string id3 = database.GetIdOfNumber(userNumber3);
-                    Console.WriteLine($"[CREATE]\t {id3} ({userNumber3})");
+                    Console.WriteLine($"[CREATE] {id3} ({userNumber3})");
 
                     break;
 
@@ -211,7 +211,7 @@ namespace ViewTalkServer.Modules
                     // [CLOSE]
                     int userNumber4 = receiveMessage.UserNumber;
                     string id4 = database.GetIdOfNumber(userNumber4);
-                    Console.WriteLine($"[CLOSE]\t {id4} ({userNumber4})");
+                    Console.WriteLine($"[CLOSE] {id4} ({userNumber4})");
 
                     break;
 
