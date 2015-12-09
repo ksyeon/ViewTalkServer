@@ -347,29 +347,29 @@ namespace ViewTalkServer.Modules
                     else if (clientList[i].Number == clientList[i].Group) // 채팅방, 강사
                     {
                         TcpMessage sendMessage = new TcpMessage();
-
-                        // Remove Client List & Chat List
-                        clientList.Remove(clientList[i]);
-                        chattingList.RemoveAll(x => (x.ChatNumber == clientList[i].Number));
-
+                        
                         // TCP Message
                         sendMessage.Command = Command.CloseChatting;
                         sendMessage.UserNumber = clientList[i].Number;
                         sendMessage.ChatNumber = clientList[i].Group;
+
+                        // Remove Client List & Chat List
+                        chattingList.RemoveAll(x => (x.ChatNumber == clientList[i].Number));
+                        clientList.Remove(clientList[i]);
 
                         SendMessage(sendMessage);
                     }
                     else // 채팅방, 학생
                     {
                         TcpMessage sendMessage = new TcpMessage();
-
-                        // Client List
-                        clientList.Remove(clientList[i]);
-
+                        
                         // TCP Message
                         sendMessage.Command = Command.ExitUser;
                         sendMessage.UserNumber = clientList[i].Number;
                         sendMessage.ChatNumber = clientList[i].Group;
+
+                        // Client List
+                        clientList.Remove(clientList[i]);
 
                         SendMessage(sendMessage);
                     }
