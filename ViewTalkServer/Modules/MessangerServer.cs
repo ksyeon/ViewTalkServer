@@ -27,6 +27,8 @@ namespace ViewTalkServer.Modules
 
             this.clientList = new List<ClientData>();
             this.chattingList = new List<ChattingData>();
+
+            Console.WriteLine($"Messanger Server Start (Port : {ServerPort})");
         }
 
         public override List<SocketData> ResponseMessage(Socket clientSocket, TcpMessage receiveMessage)

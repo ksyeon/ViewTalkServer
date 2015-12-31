@@ -24,8 +24,6 @@ namespace ViewTalkServer.Modules
             this.receiveData = new byte[65000];
 
             ConnectSocket();
-
-            Console.WriteLine($"Messanger Server Start (Port : {serverPort})");
         }
 
         private void ConnectSocket()
